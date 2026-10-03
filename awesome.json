@@ -1,11 +1,11 @@
 {
-  "topic": "Your Topic",
-  "repo": "ianwieds/awesome-template",
-  "tagline": "A curated list of Your Topic libraries, tools and guides.",
-  "scope": "It is about Your Topic, not just a project that happens to use it.",
-  "accent": "FFA000",
+  "topic": "Eleventy",
+  "repo": "ianwieds/awesome-eleventy",
+  "tagline": "Starters, themes, plugins, tools, hosts and learning resources for Eleventy (11ty), the static site generator now named Build Awesome.",
+  "scope": "It is about Eleventy (11ty or Build Awesome): built for it, built with it, or teaching it.",
+  "accent": "EC4899",
   "minStars": 10,
   "maxInactiveMonths": 0,
   "maintainer": { "name": "Ian Wiedenman", "url": "https://github.com/ianwieds" },
-  "heroAlt": "Animated isometric scene for Your Topic."
+  "heroAlt": "Animated isometric scene: Markdown pages ride a belt into a press and come out as website cards that fill a browser window."
 }

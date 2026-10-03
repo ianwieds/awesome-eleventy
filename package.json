@@ -1,5 +1,5 @@
 {
-  "name": "awesome-template",
+  "name": "awesome-eleventy",
   "version": "1.0.0",
   "private": true,
   "description": "A GitHub template for a curated awesome list, with checked pull requests.",
