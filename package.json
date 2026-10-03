@@ -1,0 +1,13 @@
+{
+  "name": "awesome-template",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A GitHub template for a curated awesome list, with checked pull requests.",
+  "license": "CC0-1.0",
+  "scripts": {
+    "test": "node --test \"tests/*.test.js\"",
+    "sync": "node scripts/sync.js",
+    "check": "node scripts/check-pr.js",
+    "sweep": "node scripts/sweep.js README.md awesome.json"
+  }
+}

@@ -1,0 +1,37 @@
+name: Suggest an entry
+description: Suggest a project, guide or resource for the list.
+title: "Add "
+body:
+  - type: markdown
+    attributes:
+      value: Read contributing.md in this repository first. A pull request that adds the line yourself is faster, and it is checked automatically.
+  - type: input
+    id: name
+    attributes:
+      label: Name
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Link
+      description: The repository or product page, or the original post. No tracking links or mirrors.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: description
+    attributes:
+      label: Description
+      description: One short sentence, 100 characters at most, ending with a period.
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Section
+      description: The section of the list it fits best.
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it belongs here

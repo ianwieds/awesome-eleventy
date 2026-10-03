@@ -1,0 +1,11 @@
+{
+  "topic": "Your Topic",
+  "repo": "ianwieds/awesome-template",
+  "tagline": "A curated list of Your Topic libraries, tools and guides.",
+  "scope": "It is about Your Topic, not just a project that happens to use it.",
+  "accent": "FFA000",
+  "minStars": 10,
+  "maxInactiveMonths": 0,
+  "maintainer": { "name": "Ian Wiedenman", "url": "https://github.com/ianwieds" },
+  "heroAlt": "Animated isometric scene for Your Topic."
+}

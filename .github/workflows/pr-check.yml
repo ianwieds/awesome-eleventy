@@ -1,0 +1,68 @@
+name: PR check
+
+# pull_request_target runs with this repository's token, so a fork's pull
+# request can be commented on and closed. Only the base branch is checked out;
+# the head README is read as data through the contents API, never executed.
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  verdict:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Read the head README
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gh api "repos/$HEAD_REPO/contents/README.md?ref=$HEAD_SHA" \
+            -H "Accept: application/vnd.github.raw" > "$RUNNER_TEMP/head.md"
+
+      - name: Check the pull request
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node scripts/check-pr.js README.md "$RUNNER_TEMP/head.md" awesome.json > "$RUNNER_TEMP/report.md" || true
+          verdict=$(tail -n 1 "$RUNNER_TEMP/report.md")
+          case "$verdict" in
+            "verdict: pass" | "verdict: fail") echo "verdict=${verdict#verdict: }" >> "$GITHUB_OUTPUT" ;;
+            *) echo "check-pr.js ended without a verdict"; cat "$RUNNER_TEMP/report.md"; exit 1 ;;
+          esac
+
+      - name: Post the report as one sticky comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          marker='<!-- awesome:pr-check -->'
+          { echo "$marker"; cat "$RUNNER_TEMP/report.md"; } > "$RUNNER_TEMP/comment.md"
+          id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -n 1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F "body=@$RUNNER_TEMP/comment.md" > /dev/null
+          else
+            gh pr comment "$PR" -R "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/comment.md"
+          fi
+
+      - name: Close on fail
+        if: steps.check.outputs.verdict == 'fail'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh pr close "$PR" -R "$GITHUB_REPOSITORY"

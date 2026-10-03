@@ -1,0 +1,28 @@
+name: Report an entry
+description: Report a dead link, an archived or inactive repository, or a wrong description.
+title: "Review "
+body:
+  - type: input
+    id: entry
+    attributes:
+      label: Entry
+      description: The name or link of the entry on the list.
+    validations:
+      required: true
+  - type: dropdown
+    id: problem
+    attributes:
+      label: Problem
+      options:
+        - Dead link
+        - Archived or deprecated repository
+        - Inactive repository
+        - Wrong description
+        - Does not belong here
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
