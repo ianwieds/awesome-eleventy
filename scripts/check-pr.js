@@ -33,12 +33,12 @@ function monthsAgo(months) {
 async function remoteChecks(url, config, { fetch, stars }) {
   const repo = parseRepo(url);
   if (!repo) {
-    const link = await checkLink(url, { fetch });
+    const link = await checkLink(url, { fetch, userAgent: config.repo });
     const note = link.note ? `; ${link.note}` : '';
     return [{ ok: link.reachable, text: `link answers (${link.detail}${note})` }];
   }
 
-  const found = await lookupRepo(repo, { fetch });
+  const found = await lookupRepo(repo, { fetch, userAgent: config.repo });
   if (!found) return [{ ok: false, text: `repository ${repo.owner}/${repo.name} exists` }];
 
   const checks = [
@@ -84,7 +84,7 @@ function describeBar(config) {
     : 'and has no inactivity limit';
   return [
     `A GitHub repository needs at least ${config.minStars} stars, must exist and not be archived, ${inactive}.`,
-    'Any other link fails on 404, 410, a 5xx or no answer within 10 seconds; 403 and 429 count as reachable.',
+    'Any other link fails on 404, 410, a 5xx or no answer within 10 seconds; 403, 429 and a certificate or headers-overflow error count as reachable.',
     'A description ends with a period, runs 100 characters or fewer, and holds no em dash.',
   ].join(' ');
 }

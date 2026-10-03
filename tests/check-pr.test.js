@@ -118,6 +118,22 @@ test('a 403 or 429 link counts as reachable and is noted', async () => {
   }
 });
 
+test('a GitHub product page takes the plain link check, not a repository lookup', async () => {
+  const copilot = 'https://github.com/features/copilot';
+  const { pass, report } = await run(read('pass.md').replace('https://github.com/koajs/koa', copilot), { [copilot]: { status: 200 } });
+  assert.equal(pass, true, report);
+  assert.match(report, /- pass: link answers \(answered 200\)/);
+});
+
+test('every request names the list from awesome.json as its User-Agent', async () => {
+  const { fetch, calls } = routeFetch({ [KOA]: repoAnswer(), [REFERENCE]: { status: 200 } });
+  await checkPr({ base: read('base.md'), head: read('pass.md'), config: CONFIG, fetch });
+  await checkPr({ base: read('base.md'), head: read('link.md'), config: CONFIG, fetch });
+  assert.deepEqual(calls.map((call) => call.url), [KOA, REFERENCE]);
+  assert.equal(calls[0].init.headers['User-Agent'], 'someone/awesome-fixture');
+  assert.equal(calls[1].init.headers['User-Agent'], 'Mozilla/5.0 (compatible; someone/awesome-fixture)');
+});
+
 test('a changed description is checked by the rules but not re-checked on the network', async () => {
   const { pass, report } = await run('changed.md');
   assert.equal(pass, true, report);

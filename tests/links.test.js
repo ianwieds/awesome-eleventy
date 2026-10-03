@@ -34,6 +34,27 @@ test('a network failure is dead and names its cause', async () => {
   assert.deepEqual(await check(error), { reachable: false, detail: 'no answer (ENOTFOUND)' });
 });
 
+test('a certificate or headers-overflow error is an answer: reachable, with a note', async () => {
+  const codes = [
+    'UNABLE_TO_GET_ISSUER_CERT_LOCALLY', 'CERT_HAS_EXPIRED', 'SELF_SIGNED_CERT_IN_CHAIN',
+    'DEPTH_ZERO_SELF_SIGNED_CERT', 'ERR_TLS_CERT_ALTNAME_INVALID', 'UND_ERR_HEADERS_OVERFLOW',
+  ];
+  for (const code of codes) {
+    const viaCause = await check(new TypeError('fetch failed', { cause: { code } }));
+    const direct = await check(Object.assign(new Error('fetch failed'), { code }));
+    for (const result of [viaCause, direct]) {
+      assert.equal(result.reachable, true, code);
+      assert.match(result.detail, new RegExp(code));
+      assert.match(result.note, /check it by hand/);
+    }
+  }
+});
+
+test('an answer error is matched on its code, never on the message text', async () => {
+  const result = await check(new TypeError('CERT_HAS_EXPIRED', { cause: { code: 'ECONNRESET' } }));
+  assert.deepEqual(result, { reachable: false, detail: 'no answer (ECONNRESET)' });
+});
+
 test('every request carries a timeout signal and follows redirects', async () => {
   const { fetch, calls } = routeFetch({ [LINK]: { status: 200 } });
   await checkLink(LINK, { fetch });

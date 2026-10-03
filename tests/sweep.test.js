@@ -7,7 +7,7 @@ const { routeFetch, repoAnswer, api } = require('./helpers');
 
 const README = fs.readFileSync(path.join(__dirname, 'fixtures', 'base.md'), 'utf8');
 const LEARN = 'https://nodejs.org/en/learn';
-const CONFIG = { minStars: 10, maxInactiveMonths: 0 };
+const CONFIG = { repo: 'someone/awesome-fixture', minStars: 10, maxInactiveMonths: 0 };
 const TWO_YEARS_AGO = new Date(Date.now() - 2 * 365 * 24 * 3600 * 1000).toISOString();
 const lastLine = (report) => report.trimEnd().split('\n').pop();
 

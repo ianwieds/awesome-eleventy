@@ -80,12 +80,16 @@ test('running sync twice equals running it once', () => {
 });
 
 test('maxInactiveMonths 0 words the Maintained bullet as archived or deprecated only', () => {
-  const dir = tempCopy();
-  editConfig(dir, { maxInactiveMonths: 12 });
-  sync(dir);
-  editConfig(dir, { maxInactiveMonths: 0 });
-  sync(dir);
-  assert.match(read(dir, 'contributing.md'), /for a repository, <!-- awesome:inactive -->not archived and not marked deprecated by its owner<!-- \/awesome:inactive -->\./);
+  for (const clause of ['', ', and documented in English']) {
+    const dir = tempCopy();
+    const closer = '<!-- /awesome:inactive -->';
+    fs.writeFileSync(path.join(dir, 'contributing.md'), read(dir, 'contributing.md').replace(closer, `${closer}${clause}`));
+    editConfig(dir, { maxInactiveMonths: 12 });
+    sync(dir);
+    editConfig(dir, { maxInactiveMonths: 0 });
+    sync(dir);
+    assert.match(read(dir, 'contributing.md'), /for a repository, <!-- awesome:inactive -->not archived and not marked deprecated by its owner<!-- \/awesome:inactive -->[^\n]*\./);
+  }
 });
 
 test('an unknown, unclosed or missing fragment fails loudly and writes nothing', () => {

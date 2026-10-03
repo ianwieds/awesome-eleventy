@@ -27,6 +27,18 @@ test('parseRepo reads github.com/<owner>/<name> with nothing after the name', ()
   assert.equal(parseRepo('https://koajs.com'), null);
 });
 
+test('parseRepo reads a GitHub product page under a reserved first segment as a plain link', () => {
+  for (const url of ['features/copilot', 'marketplace/actions', 'topics/nodejs', 'sponsors/sindresorhus', 'orgs/nodejs', 'Collections/clean-code-linters']) {
+    assert.equal(parseRepo(`https://github.com/${url}`), null, url);
+  }
+});
+
+test('parseRepo reads anything after the repository name as a plain link', () => {
+  for (const rest of ['blob/master/README.md', 'releases/tag/v2.0.0', 'wiki', 'issues']) {
+    assert.equal(parseRepo(`https://github.com/koajs/koa/${rest}`), null, rest);
+  }
+});
+
 test('lookupRepo reads stars, archived and the last push from the REST API', async () => {
   const { fetch, calls } = routeFetch({ [api('koajs/koa')]: repoAnswer({ stars: 35000, archived: true, pushedAt: '2026-01-02T03:04:05Z' }) });
   const repo = await lookupRepo({ owner: 'koajs', name: 'koa' }, { fetch });

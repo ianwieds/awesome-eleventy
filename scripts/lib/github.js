@@ -5,25 +5,32 @@
 const { normalizeUrl } = require('./readme');
 
 const API = 'https://api.github.com';
+const RESERVED = new Set([
+  'features', 'marketplace', 'topics', 'orgs', 'sponsors', 'about', 'settings', 'apps', 'collections', 'explore',
+  'trending', 'enterprise', 'pricing', 'customer-stories', 'security', 'readme', 'login', 'join', 'site', 'blog',
+  'resources', 'solutions', 'newsroom', 'mobile', 'codespaces', 'copilot', 'issues', 'pulls', 'notifications', 'new',
+  'organizations', 'events', 'discussions',
+]);
 
 /**
  * Read a repository URL: `github.com/<owner>/<name>` with nothing after the name.
+ * A reserved first segment is a GitHub page, not an owner.
  * @param {string} url
  * @returns {{ owner: string, name: string } | null}
  */
 function parseRepo(url) {
   const match = normalizeUrl(url).match(/^https?:\/\/github\.com\/([^/?#]+)\/([^/?#]+)$/);
-  return match ? { owner: match[1], name: match[2] } : null;
+  return match && !RESERVED.has(match[1].toLowerCase()) ? { owner: match[1], name: match[2] } : null;
 }
 
 /**
  * Look up one repository. Sends `GITHUB_TOKEN` as a bearer token when set.
  * @param {{ owner: string, name: string }} repo
- * @param {{ fetch?: Function }} [options]
+ * @param {{ fetch?: Function, userAgent: string }} options - userAgent is the list's `owner/name`
  * @returns {Promise<{ stars: number, archived: boolean, pushedAt: Date } | null>} null when missing
  */
-async function lookupRepo({ owner, name }, { fetch = globalThis.fetch } = {}) {
-  const headers = { Accept: 'application/vnd.github+json', 'User-Agent': 'awesome-template' };
+async function lookupRepo({ owner, name }, { fetch = globalThis.fetch, userAgent } = {}) {
+  const headers = { Accept: 'application/vnd.github+json', 'User-Agent': userAgent };
   if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
 
   const res = await fetch(`${API}/repos/${owner}/${name}`, { headers });
