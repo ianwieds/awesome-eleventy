@@ -18,10 +18,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Add a commit to the maintenance branch
+      - name: Bump the maintenance branch
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git checkout maintenance 2>/dev/null || git checkout -b maintenance
-          git commit --allow-empty -m "Maintenance"
-          git push origin maintenance
+          git commit --allow-empty --amend -m "Maintenance" || git commit --allow-empty -m "Maintenance"
+          git push --force origin maintenance
