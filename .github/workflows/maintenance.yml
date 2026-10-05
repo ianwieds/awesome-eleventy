@@ -1,0 +1,27 @@
+name: Maintenance
+
+# One empty commit a day on a side branch keeps the repository active, so
+# GitHub never pauses the scheduled sweep after 60 quiet days.
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add a commit to the maintenance branch
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git checkout maintenance 2>/dev/null || git checkout -b maintenance
+          git commit --allow-empty -m "Maintenance"
+          git push origin maintenance
