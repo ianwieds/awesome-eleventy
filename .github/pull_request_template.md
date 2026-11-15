@@ -12,3 +12,4 @@
 - [ ] Placed in the right section, in alphabetical order.
 - [ ] Description is my own words, one sentence of 100 characters at most, ending with a period.
 - [ ] I searched the list and it is not already here.
+- [ ] <!-- awesome:star -->I starred this repo if I found it helpful.<!-- /awesome:star -->
