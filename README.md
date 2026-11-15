@@ -592,10 +592,10 @@ Eleventy joined Font Awesome in 2024 and was renamed Build Awesome in March 2026
 - [Eleventy Meetup](https://11tymeetup.dev/) - Virtual meetup with talks about Eleventy.
 - [GitHub Discussions](https://github.com/11ty/buildawesome/discussions) - Questions and answers on GitHub.
 
+<!-- awesome:footer -->
 ## Contributing
 
 Contributions are welcome. Read the [contribution guidelines](contributing.md) first.
 
-<!-- awesome:maintainer -->
 Maintained by [Ian Wiedenman](https://github.com/ianwieds).
-<!-- /awesome:maintainer -->
+<!-- /awesome:footer -->

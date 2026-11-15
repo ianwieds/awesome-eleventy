@@ -13,6 +13,6 @@ jobs:
   pr-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: ianwieds/awesome-kit@v1
+      - uses: ianwieds/awesome-kit@v2
         with:
           command: pr-check
