@@ -440,7 +440,7 @@ Eleventy joined Font Awesome in 2024 and was renamed Build Awesome in March 2026
 - [Build Awesome One](https://github.com/buildawesome-one/kit) - One plugin, one shared config and one starter that bundle the common plugins.
 - [Eleventy Dev Server](https://github.com/11ty/dev-server) - Small development server with live reload, usable outside Eleventy.
 - [Eleventy Explorer](https://eleventy-explorer.tigersway.dev/) - Searches GitHub for Eleventy starters and plugins, sortable by recent activity.
-- [Omega](https://github.com/Omega-JS-Stack/omega) - Framework that ships an Eleventy site, Firebase backend, desktop app and extension together.
+- [Omega](https://github.com/omegajs-dev/omega) - Framework that ships an Eleventy site, Firebase backend, desktop app and extension together.
 
 ## Content management
 
